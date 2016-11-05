@@ -18,6 +18,8 @@ class Vector:
 
     def normalize(self) -> None:
         length = self.length()
+        if length == 0:
+            length = 0.0001
         self.x /= length
         self.y /= length
 
@@ -28,10 +30,10 @@ class Vector:
         return Vector(self.x - other.x, self.y - other.y)
 
     def distance(self, other: 'Vector') -> float:
-        return (other * self).length()
+        return self.direction(other).length()
 
     def direction(self, other: 'Vector') -> 'Vector':
-        return
+        return other - self
 
     def get_int_vector(self):
         return Vector(int(self.x), int(self.y))
@@ -40,10 +42,14 @@ class Vector:
         return (int(self.x), int(self.y))
 
     def __mul__(self, other: float) -> 'Vector':
-        return Vector(self.x - other, self.y * other)
+        return Vector(self.x * other, self.y * other)
 
     def dot(self, other: 'Vector') -> float:
         """
         Calc vector dot product
         """
         return self.x * other.x
+
+    def __str__(self):
+        return "x: " + str(self.x)  + " y: " + str(self.y)
+
