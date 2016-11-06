@@ -17,14 +17,17 @@ class Vector:
         return math.sqrt(self.x * self.x + self.y * self.y)
 
     def normalize(self) -> None:
-        length = self.length()
-        if length == 0:
-            length = 0.0001
+        length = self.length() or 0.0001
         self.x /= length
         self.y /= length
 
     def __add__(self, other: 'Vector') -> 'Vector':
         return Vector(self.x + other.x, self.y + other.y)
+
+    def __iadd__(self, other: 'Vector') -> 'Vector':
+        self.x += other.x
+        self.y += other.y
+        return self
 
     def __sub__(self, other: 'Vector') -> 'Vector':
         return Vector(self.x - other.x, self.y - other.y)
@@ -48,8 +51,7 @@ class Vector:
         """
         Calc vector dot product
         """
-        return self.x * other.x
+        return self.x * other.x + self.y * other.y
 
     def __str__(self):
-        return "x: " + str(self.x)  + " y: " + str(self.y)
-
+        return "x: " + str(self.x) + " y: " + str(self.y)

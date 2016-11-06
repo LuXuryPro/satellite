@@ -1,6 +1,5 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-from evolution import Cpu
 from math2d import Vector
 import math
 
@@ -32,7 +31,7 @@ class Planet:
 
 
 class Satellite:
-    def __init__(self, start_planet: Planet, cpu: Cpu, destination_planet: Planet):
+    def __init__(self, start_planet: 'Planet', cpu: 'Cpu', destination_planet: 'Planet'):
         self.start_planet = start_planet
         self.destination_planet = destination_planet
         self.cpu = cpu
@@ -46,6 +45,7 @@ class Satellite:
         self.velocity = self.start_planet.velocity
         self.fly_time = 0
         self.closest_encounter = 10e10
+        self.closest_encounter_time = 0
 
     def launch(self):
         self.fly = True
@@ -76,6 +76,8 @@ class Satellite:
         distance_to_destination = self.position.distance(self.destination_planet.position)
         if (distance_to_destination < self.closest_encounter):
             self.closest_encounter = distance_to_destination
+            self.closest_encounter_time = self.fly_time + self.cpu.time
+            self.closest_encounter_position = Vector(self.position.x, self.position.y)
 
     def get_score(self):
-        return self.closest_encounter + self.fly_time
+        return self.closest_encounter + self.fly_time + abs(self.cpu.speed)

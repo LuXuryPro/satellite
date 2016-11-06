@@ -31,12 +31,12 @@ class Simulation:
             direction.normalize()
             this_planet_force_magnitude = planet.mass * G / (
                 distance * distance)
-            force = force + direction * this_planet_force_magnitude
+            force += (direction * this_planet_force_magnitude)
         # sun force
         distance = self.satellite.position.distance(Vector(0, 0))
         direction = self.satellite.position.direction(Vector(0, 0))
         direction.normalize()
         sun_force_magnitude = (self.sun_mass * G) / (distance * distance)
-        force = force + direction * sun_force_magnitude
+        force += (direction * sun_force_magnitude)
 
         return force
