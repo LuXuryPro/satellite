@@ -39,7 +39,8 @@ planets = [
     ]
 
 time_factor = 0.001
-satellite = Satellite(planets[0], Cpu(11.02258, 13.8372, 38.3958), planets[1])
+
+satellite = Satellite(planets[0], Cpu(0.1036, 1.12345, 7.679484), planets[1])
 simulation = Simulation(planets=planets, satellite=satellite)
 total = 0
 

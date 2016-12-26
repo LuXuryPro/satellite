@@ -13,6 +13,9 @@ import random
 from objects import Planet
 from objects import Satellite
 from simulation import Simulation
+import sys
+from operator import attrgetter
+
 
 
 class Cpu:
@@ -28,11 +31,19 @@ class Cpu:
         self.closest_encounter = 0
         self.closest_encounter_time = 0
 
-    def cross_over_other(self, other: 'Cpu', stability):
-        speed = (self.speed + other.speed) / 2 + (2 * stability * random.random() - stability)
-        angle = (self.angle + other.angle) / 2 + (2 * stability * random.random() - stability)
-        time = (self.time + other.time) / 2 + (2 * stability * random.random() - stability)
+    def cross_over_other(self, other: 'Cpu'):
+        speed = (self.speed + other.speed) / 2
+        angle = (self.angle + other.angle) / 2
+        time = (self.time + other.time) / 2
         return Cpu(speed, angle, time)
+
+    def mutate(self, power):
+        self.speed = self.speed  + (- power  + 2 * power * random.random())
+        self.angle = self.angle + (- power  + 2 * power * random.random())
+        self.time = self.time + (- power  + 2 * power * random.random())
+        if self.time < 0:
+            self.time = 0
+
 
     def __str__(self):
         return str(self.score) + " speed: " + str(self.speed) + " angle: " + str(self.angle) + " time: " + str(self.time) + " ce: " + str(self.closest_encounter) + " cet: " + str(self.closest_encounter_time)
@@ -74,23 +85,63 @@ class Cpu:
         return population
 
     @staticmethod
-    def cross_over(population):
-        p = population[0: len(population)//2]
-        n = p[:]
-        for i, cpu in enumerate(p):
-            a = random.choice(p)
-            b = random.choice(p)
-            c = a.cross_over_other(b, 10 + math.exp(-i))
-            n.append(c)
+    def cross_over(population, i):
+        start_len = len(population)
+        p = population
+        n = []
+        n.append(p[0])
+        s = int(0.1 * len(population))
+        mt = 0.1
+        while len(n) < start_len:
+            sys.stdout.write('\r')
+            sys.stdout.write('[')
+            sys.stdout.write('='*len(n) + " "*(start_len - len(n)) + "]")
+            sh = [random.choice(p) for x in range(s)]
+            a = min(sh, key=attrgetter('score'))
+            sh = [random.choice(p) for x in range(s)]
+            b = min(sh, key=attrgetter('score'))
+            c = a.cross_over_other(b)
+            c.mutate(mt)
+            k = Cpu.evaluate([c])
+            c = k[0]
+            if c.score < a.score and c.score < b.score or mt > 1:
+                mt = 0.1
+                n.append(c)
+            else:
+                mt += 0.1
+
+        n.sort(key = lambda c: c.score)
+        print('')
         return n
+
+    @staticmethod
+    def histogram(population):
+        hist_x = len(population)
+        hist_y = 30
+
+        for y in range(hist_y):
+            for x in range(hist_x):
+                value = population[(len(population) * x) // hist_x].score
+                value = hist_y * (value / max([z.score for z in population]))
+                if value >= hist_y - y:
+                    print ("+", end="")
+                else:
+                    print (" ", end="")
+            print("\n", end="")
+
+
+
 
 
 
 if __name__ == "__main__":
-    n = Cpu.init_population(10)
+    n = Cpu.init_population(50)
+    n = Cpu.evaluate(n)
     for i in range(1000):
-        n = Cpu.evaluate(n)
+        Cpu.histogram(n)
         print(n[0])
-        n = Cpu.cross_over(n)
+        print (sum([x.score for x in n])/len(n))
+        print(n[-1])
+        n = Cpu.cross_over(n, i)
 
 

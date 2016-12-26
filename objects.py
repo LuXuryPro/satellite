@@ -80,4 +80,4 @@ class Satellite:
             self.closest_encounter_position = Vector(self.position.x, self.position.y)
 
     def get_score(self):
-        return self.closest_encounter + self.fly_time + abs(self.cpu.speed)
+        return self.closest_encounter + abs(self.cpu.speed)
