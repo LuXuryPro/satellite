@@ -1,6 +1,7 @@
 """
 simulation visualization using pygame
 """
+import json
 import sys
 import random
 
@@ -33,14 +34,33 @@ clock = pygame.time.Clock()
 
 done = False
 
-planets = [
-        Planet(50, 10, 0), # start planet
-        Planet(100, 20, math.pi/2),
-    ]
+# try:
+#     with open('simulation.json') as data_file:
+#         data = json.load(data_file)
+#
+# except FileNotFoundError:
+#     print("File simulation.json was not found. Please provide it using readme as guide.")
+#     sys.exit(0)
+# except Exception:
+#     print("Your simulation.json is not valid. Please check readme for examples.")
+#     sys.exit(0)
+#
+# planetsJSON = data["simulation"]["planets"]
+# planets = []
+#
+# for i in range(len(planetsJSON)):
+#     planetJSON = planetsJSON[i]
+#     planets.append(Planet(int(planetJSON["distance-to-sun"]), int(planetJSON["mass"]),
+#                           float(planetJSON["start-angle"])))
+#
+# start_planet = planets[int(data["simulation"]["start-planet"])]
+# destination_planet = planets[int(data["simulation"]["destination-planet"])]
 
+(planets, start_planet, destination_planet) = Simulation.load_from_file()
 time_factor = 0.001
 
-satellite = Satellite(planets[0], Cpu(0.1036, 1.12345, 7.679484), planets[1])
+satellite = Satellite(start_planet, Cpu(0.1036, 1.12345, 7.679484), destination_planet)
+
 simulation = Simulation(planets=planets, satellite=satellite)
 total = 0
 
