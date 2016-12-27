@@ -1,5 +1,5 @@
 # Satellite
-Simple simulator, which uses evolution algorithm to find the best parameters for satellite.
+Simple simulator, which uses evolution algorithm to find the best starting parameters for satellite.
 
 ## Setup:
 ###Clone repo
@@ -12,8 +12,13 @@ In case of errors try using pip install to get needed libraries.
 ```bash
 python3 video.py
 ```
+You can provide json file with starting parameters as input argument.
+```bash
+python3 video.py simulation.json
+```
+If no file name is specified default config.json will be used.
 
-##Example of JSON file with planets stats:
+##Example of JSON file with planets stats(default config.json):
 ```bash
 {
    "simulation":{

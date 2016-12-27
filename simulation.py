@@ -26,15 +26,20 @@ class Simulation:
 
     @staticmethod
     def load_from_file() -> (List[Planet], Planet, Planet):
+
+        file_name = "config.json"
+        if len(sys.argv) > 1:
+            file_name = sys.argv[1]
+
         try:
-            with open('simulation.json') as data_file:
+            with open(file_name) as data_file:
                 data = json.load(data_file)
 
         except FileNotFoundError:
-            print("File simulation.json was not found. Please provide it using readme as guide.")
+            print("File " + file_name + " was not found. Please provide it using readme as guide.")
             sys.exit(0)
         except Exception:
-            print("Your simulation.json is not valid. Please check readme for examples.")
+            print("Your file " + file_name + " is not valid. Please check readme for examples.")
             sys.exit(0)
 
         planets_json = data["simulation"]["planets"]
@@ -50,7 +55,7 @@ class Simulation:
 
         if start_index < 0 or start_index >= len(planets) or \
                         destination_index < 0 or destination_index >= len(planets):
-            print("Your simulation.json is not valid. Please check readme for examples.")
+            print("Your file " + file_name + " is not valid. Please check readme for examples.")
             sys.exit(0)
 
         start_planet = planets[start_index]

@@ -34,28 +34,6 @@ clock = pygame.time.Clock()
 
 done = False
 
-# try:
-#     with open('simulation.json') as data_file:
-#         data = json.load(data_file)
-#
-# except FileNotFoundError:
-#     print("File simulation.json was not found. Please provide it using readme as guide.")
-#     sys.exit(0)
-# except Exception:
-#     print("Your simulation.json is not valid. Please check readme for examples.")
-#     sys.exit(0)
-#
-# planetsJSON = data["simulation"]["planets"]
-# planets = []
-#
-# for i in range(len(planetsJSON)):
-#     planetJSON = planetsJSON[i]
-#     planets.append(Planet(int(planetJSON["distance-to-sun"]), int(planetJSON["mass"]),
-#                           float(planetJSON["start-angle"])))
-#
-# start_planet = planets[int(data["simulation"]["start-planet"])]
-# destination_planet = planets[int(data["simulation"]["destination-planet"])]
-
 (planets, start_planet, destination_planet) = Simulation.load_from_file()
 time_factor = 0.001
 
@@ -82,23 +60,23 @@ while not done:
     simulation.step(delta * time_factor)
     draw(screen=screen, simulation=simulation)
     font = pygame.font.Font(None, 36)
-    label = font.render(str(total), 1, (255,255,0))
+    label = font.render(str(total), 1, (255, 255, 0))
     screen.blit(label, (100, 100))
-    label = font.render(str(time_factor), 1, (255,255,0))
+    label = font.render(str(time_factor), 1, (255, 255, 0))
     screen.blit(label, (100, 200))
     label = font.render(str(satellite.closest_encounter), 1, (255,255,0))
     screen.blit(label, (100, 300))
     label = font.render(str(satellite.closest_encounter_time), 1, (255,255,0))
     screen.blit(label, (100, 400))
-    screen_satelite_pos = satellite.position + Vector(400, 300)
-    pygame.draw.line(screen, (0,255,0), screen_satelite_pos.get_int_tuple(), (satellite.velocity * 10 + screen_satelite_pos).get_int_tuple(), 2)
-    pygame.draw.line(screen, (0,255,255), screen_satelite_pos.get_int_tuple(), (satellite.force * 100 + screen_satelite_pos).get_int_tuple(), 2)
-    if (len(sat_p) > 500):
+    screen_satellite_pos = satellite.position + Vector(400, 300)
+    pygame.draw.line(screen, (0, 255, 0), screen_satellite_pos.get_int_tuple(), (satellite.velocity * 10 + screen_satellite_pos).get_int_tuple(), 2)
+    pygame.draw.line(screen, (0, 255, 255), screen_satellite_pos.get_int_tuple(), (satellite.force * 100 + screen_satellite_pos).get_int_tuple(), 2)
+    if len(sat_p) > 500:
         sat_p.pop(0)
-    sat_p.append(satellite.position + Vector(400,300))
+    sat_p.append(satellite.position + Vector(400, 300))
     if len(sat_p) >= 2:
         for i, p in enumerate(sat_p[0:-1]):
-            pygame.draw.line(screen, (255,100,0), sat_p[i].get_int_tuple(), sat_p[i+1].get_int_tuple(), 2)
+            pygame.draw.line(screen, (255, 100, 0), sat_p[i].get_int_tuple(), sat_p[i+1].get_int_tuple(), 2)
     try:
         pygame.draw.circle(screen, (255, 0, 0), (satellite.closest_encounter_position + Vector(400,300)).get_int_tuple(), 10)
     except:
