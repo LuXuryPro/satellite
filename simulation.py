@@ -1,9 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 import json
-
 import sys
-
 from math2d import Vector
 from objects import Planet, Satellite
 from typing import List
@@ -13,8 +11,9 @@ G = 1
 
 class Simulation:
     def __init__(self, planets: List[Planet],
-            satellite: Satellite) -> None:
-        self.sun_mass = 10000
+                 satellite: Satellite,
+                 sun_mass = 10000) -> None:
+        self.sun_mass = sun_mass
         self.planets = planets
         self.satellite = satellite
 

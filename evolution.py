@@ -15,6 +15,14 @@ from objects import Satellite
 from simulation import Simulation
 import sys
 from operator import attrgetter
+import argparse
+import ipdb
+
+
+planets = None
+start_planet = None
+destination_planet = None
+sun_mass = None
 
 
 
@@ -67,12 +75,9 @@ class Cpu:
         For every phenotype in population simulate it and give score
         """
         for cpu in population:
-            planets = [
-                    Planet(50, 10, 0), # start planet
-                    Planet(100, 20, math.pi/2),
-                    ]
-            satellite = Satellite(planets[0], cpu, planets[1])
-            simulation = Simulation(planets=planets, satellite=satellite)
+            satellite = Satellite(start_planet, cpu, destination_planet)
+            simulation = Simulation(planets=planets, satellite=satellite,
+                                    sun_mass=sun_mass)
             simulation_time = 1000
             delta = 0.05
             for i in range(simulation_time):
@@ -135,9 +140,16 @@ class Cpu:
 
 
 if __name__ == "__main__":
-    n = Cpu.init_population(50)
+    parser = argparse.ArgumentParser(description='Simulation visualization')
+    parser.add_argument("-c", help="config file name", type=str, dest="config",
+                        required=True)
+    parser.add_argument("-g", type=int, required=True)
+    parser.add_argument("-n", type=int, required=True)
+    args = parser.parse_args()
+    (planets, start_planet, destination_planet, sun_mass) = Simulation.load_from_file(args.config)
+    n = Cpu.init_population(args.n)
     n = Cpu.evaluate(n)
-    for i in range(1000):
+    for i in range(args.g):
         Cpu.histogram(n)
         print(n[0])
         print (sum([x.score for x in n])/len(n))

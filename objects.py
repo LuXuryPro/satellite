@@ -4,6 +4,7 @@ from math2d import Vector
 import math
 
 
+
 class Planet:
     def __init__(self, distance_to_sun=1, mass=1, initial_angle=0):
         self.distance_to_sun = distance_to_sun
@@ -44,14 +45,13 @@ class Satellite:
         self.position = self.start_planet.position + Vector(0, 5)
         self.velocity = self.start_planet.velocity
         self.fly_time = 0
-        self.closest_encounter = 10e10
+        self.closest_encounter = 10e100
         self.closest_encounter_time = 0
 
     def launch(self):
         self.fly = True
         self.velocity = self.velocity + Vector(math.cos(self.cpu.angle),
-                                               math.sin(
-                                                   self.cpu.angle)) * self.cpu.speed
+                                               math.sin(self.cpu.angle)) * self.cpu.speed
 
     def set_force(self, force: Vector):
         self.force = force
@@ -61,7 +61,7 @@ class Satellite:
             self.position = self.start_planet.position + Vector(0, 5)
             self.velocity = self.start_planet.velocity
             self.cut_down -= dt
-            if self.cut_down > 0:
+            if self.cut_down > 0.0:
                 return
             else:
                 self.launch()

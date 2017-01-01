@@ -35,7 +35,6 @@ parser.add_argument("--angle", type=float, required=True)
 parser.add_argument("--time", type=float, required=True)
 args = parser.parse_args()
 
-
 pygame.init()
 screen = pygame.display.set_mode((800, 600))
 
@@ -49,7 +48,7 @@ time_factor = 0.001
 
 satellite = Satellite(start_planet, Cpu(args.speed, args.angle, args.time), destination_planet)
 
-simulation = Simulation(planets=planets, satellite=satellite)
+simulation = Simulation(planets=planets, satellite=satellite, sun_mass=sun_mass)
 total = 0
 
 sat_p = []
@@ -75,14 +74,14 @@ while not done:
     screen.blit(label, (100, 100))
     label = font.render(str(time_factor), 1, (255, 255, 0))
     screen.blit(label, (100, 200))
-    label = font.render(str(satellite.closest_encounter), 1, (255,255,0))
+    label = font.render(str("CE: " + str(satellite.closest_encounter)), 1, (255,255,0))
     screen.blit(label, (100, 300))
-    label = font.render(str(satellite.closest_encounter_time), 1, (255,255,0))
+    label = font.render(("CET: " + str(satellite.closest_encounter_time)), 1, (255,255,0))
     screen.blit(label, (100, 400))
     screen_satellite_pos = satellite.position + Vector(400, 300)
     pygame.draw.line(screen, (0, 255, 0), screen_satellite_pos.get_int_tuple(), (satellite.velocity * 10 + screen_satellite_pos).get_int_tuple(), 2)
     pygame.draw.line(screen, (0, 255, 255), screen_satellite_pos.get_int_tuple(), (satellite.force * 100 + screen_satellite_pos).get_int_tuple(), 2)
-    if len(sat_p) > 500:
+    if len(sat_p) > 5000:
         sat_p.pop(0)
     sat_p.append(satellite.position + Vector(400, 300))
     if len(sat_p) >= 2:
