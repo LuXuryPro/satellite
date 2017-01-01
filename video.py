@@ -7,6 +7,7 @@ import random
 
 import pygame
 import math
+import argparse
 
 from math2d import Vector
 from objects import Satellite, Planet
@@ -26,6 +27,14 @@ def draw(screen: pygame.Surface, simulation: Simulation):
     rect = (satellite_screen_pos.x - 2, satellite_screen_pos.y - 2, 4, 4)
     pygame.draw.rect(screen, (0, 0, 255), rect)
 
+parser = argparse.ArgumentParser(description='Simulation visualization')
+parser.add_argument("-c", help="config file name", type=str, dest="config",
+                    required=True)
+parser.add_argument("--speed", type=float, required=True)
+parser.add_argument("--angle", type=float, required=True)
+parser.add_argument("--time", type=float, required=True)
+args = parser.parse_args()
+
 
 pygame.init()
 screen = pygame.display.set_mode((800, 600))
@@ -34,15 +43,17 @@ clock = pygame.time.Clock()
 
 done = False
 
-(planets, start_planet, destination_planet) = Simulation.load_from_file()
+
+(planets, start_planet, destination_planet, sun_mass) = Simulation.load_from_file(args.config)
 time_factor = 0.001
 
-satellite = Satellite(start_planet, Cpu(0.1036, 1.12345, 7.679484), destination_planet)
+satellite = Satellite(start_planet, Cpu(args.speed, args.angle, args.time), destination_planet)
 
 simulation = Simulation(planets=planets, satellite=satellite)
 total = 0
 
 sat_p = []
+
 
 while not done:
     for event in pygame.event.get():

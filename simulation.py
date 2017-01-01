@@ -12,7 +12,8 @@ G = 1
 
 
 class Simulation:
-    def __init__(self, planets: List[Planet], satellite: Satellite) -> None:
+    def __init__(self, planets: List[Planet],
+            satellite: Satellite) -> None:
         self.sun_mass = 10000
         self.planets = planets
         self.satellite = satellite
@@ -25,43 +26,45 @@ class Simulation:
         self.satellite.step(dt)
 
     @staticmethod
-    def load_from_file() -> (List[Planet], Planet, Planet):
+    def load_from_file(file_name) -> (List[Planet], Planet, Planet, int):
 
-        file_name = "config.json"
-        if len(sys.argv) > 1:
-            file_name = sys.argv[1]
+        file_name = file_name or "config.json"
 
         try:
             with open(file_name) as data_file:
                 data = json.load(data_file)
 
         except FileNotFoundError:
-            print("File " + file_name + " was not found. Please provide it using readme as guide.")
-            sys.exit(0)
+            raise RuntimeError("File " + file_name + " was not found. Please provide it using readme as guide.")
         except Exception:
-            print("Your file " + file_name + " is not valid. Please check readme for examples.")
-            sys.exit(0)
+            raise RuntimeError("Your file " + file_name + " is not valid. Please check readme for examples.")
 
-        planets_json = data["simulation"]["planets"]
+        planets_json = data["planets"]
         planets = []
 
-        for i in range(len(planets_json)):
-            planet_json = planets_json[i]
-            planets.append(Planet(int(planet_json["distance-to-sun"]), int(planet_json["mass"]),
-                                  float(planet_json["start-angle"])))
+        start_planet = None
+        destination_planet = None
 
-        start_index = int(data["simulation"]["start-planet"])
-        destination_index = int(data["simulation"]["destination-planet"])
+        for planet_json in planets_json:
+            planet = Planet(int(planet_json["distance-to-sun"]),
+                            int(planet_json["mass"]),
+                            float(planet_json["start-angle"]))
+            planets.append(planet)
+            if planet_json.get('start'):
+                start_planet = planet
+            elif planet_json.get('destination'):
+                destination_planet = planet
 
-        if start_index < 0 or start_index >= len(planets) or \
-                        destination_index < 0 or destination_index >= len(planets):
-            print("Your file " + file_name + " is not valid. Please check readme for examples.")
-            sys.exit(0)
+        sun_mass = int(data["sun-mass"])
 
-        start_planet = planets[start_index]
-        destination_planet = planets[destination_index]
+        if not start_planet:
+            raise RuntimeError(
+                    "You must mark start planet in config file")
+        if not destination_planet:
+            raise RuntimeError(
+                    "You must mark destination planet in config file")
 
-        return planets, start_planet, destination_planet
+        return planets, start_planet, destination_planet, sun_mass
 
     def calc_overall_force(self) -> Vector:
         force = Vector()
