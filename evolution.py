@@ -8,7 +8,9 @@ Function to minimize
 f() = satelite_fly_time + satelite_closest_approach
 """
 import math
+import json
 
+from math2d import Vector
 import random
 from objects import Planet
 from objects import Satellite
@@ -16,15 +18,8 @@ from simulation import Simulation
 import sys
 from operator import attrgetter
 import argparse
-import ipdb
 
-
-planets = None
-start_planet = None
-destination_planet = None
-sun_mass = None
-
-
+args = None
 
 class Cpu:
     """
@@ -33,7 +28,7 @@ class Cpu:
 
     def __init__(self, speed: float, angle: float, time: int) -> None:
         self.speed = speed
-        self.angle = angle
+        self.angle = angle % (2 * math.pi)
         self.time = time
         self.score = 10e10
         self.closest_encounter = 0
@@ -52,6 +47,10 @@ class Cpu:
         if self.time < 0:
             self.time = 0
 
+    def get_velocity_vector(self):
+        return Vector(math.cos(self.angle),
+                      math.sin(self.angle)) * self.speed
+
 
     def __str__(self):
         return str(self.score) + " speed: " + str(self.speed) + " angle: " + str(self.angle) + " time: " + str(self.time) + " ce: " + str(self.closest_encounter) + " cet: " + str(self.closest_encounter_time)
@@ -61,9 +60,9 @@ class Cpu:
 
     @staticmethod
     def get_random():
-        return Cpu(10 * random.random(),
+        return Cpu(100 * random.random(),
                    2 * math.pi * random.random(),
-                   10 * random.random())
+                   50 * random.random())
 
     @staticmethod
     def init_population(size: int):
@@ -75,6 +74,7 @@ class Cpu:
         For every phenotype in population simulate it and give score
         """
         for cpu in population:
+            (planets, start_planet, destination_planet, sun_mass) = Simulation.load_from_file(args.config)
             satellite = Satellite(start_planet, cpu, destination_planet)
             simulation = Simulation(planets=planets, satellite=satellite,
                                     sun_mass=sun_mass)
@@ -85,6 +85,7 @@ class Cpu:
             cpu.score = satellite.get_score()
             cpu.closest_encounter = satellite.closest_encounter
             cpu.closest_encounter_time = satellite.closest_encounter_time
+            cpu.satellite = satellite
 
         population.sort(key = lambda c: c.score)
         return population
@@ -146,12 +147,13 @@ if __name__ == "__main__":
     parser.add_argument("-g", type=int, required=True)
     parser.add_argument("-n", type=int, required=True)
     args = parser.parse_args()
-    (planets, start_planet, destination_planet, sun_mass) = Simulation.load_from_file(args.config)
     n = Cpu.init_population(args.n)
     n = Cpu.evaluate(n)
     for i in range(args.g):
         Cpu.histogram(n)
         print(n[0])
+        with open("best_path.json", "w") as f:
+            f.write(n[0].satellite.toJSON())
         print (sum([x.score for x in n])/len(n))
         print(n[-1])
         n = Cpu.cross_over(n, i)

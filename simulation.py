@@ -43,18 +43,19 @@ class Simulation:
 
         start_planet = None
         destination_planet = None
+        sun_mass = int(data["sun-mass"])
 
         for planet_json in planets_json:
             planet = Planet(int(planet_json["distance-to-sun"]),
                             int(planet_json["mass"]),
-                            float(planet_json["start-angle"]))
+                            float(planet_json["start-angle"]),
+                            sun_mass)
             planets.append(planet)
             if planet_json.get('start'):
                 start_planet = planet
             elif planet_json.get('destination'):
                 destination_planet = planet
 
-        sun_mass = int(data["sun-mass"])
 
         if not start_planet:
             raise RuntimeError(
@@ -71,8 +72,7 @@ class Simulation:
             distance = self.satellite.position.distance(planet.position)
             direction = self.satellite.position.direction(planet.position)
             direction.normalize()
-            this_planet_force_magnitude = planet.mass * G / (
-                distance * distance)
+            this_planet_force_magnitude = planet.mass * G / (distance * distance)
             force += (direction * this_planet_force_magnitude)
         # sun force
         distance = self.satellite.position.distance(Vector(0, 0))

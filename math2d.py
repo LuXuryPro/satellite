@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 
 import math
+import json
 
 
 class Vector:
@@ -55,3 +56,6 @@ class Vector:
 
     def __str__(self):
         return "x: " + str(self.x) + " y: " + str(self.y)
+
+    def toDict(self):
+        return {"x": self.x, "y": self.y}

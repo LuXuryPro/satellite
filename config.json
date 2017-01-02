@@ -10,8 +10,7 @@
         {
             "distance-to-sun": 100,
             "mass": 20,
-            "start-angle": 1.57,
-            "destination": true
+            "start-angle": 1.57
         },
         {
             "distance-to-sun": 200,
@@ -22,6 +21,12 @@
             "distance-to-sun": 250,
             "mass": 10,
             "start-angle": 4.5
+        },
+        {
+            "distance-to-sun": 300,
+            "mass": 5,
+            "start-angle": 6,
+            "destination": true
         }
     ]
 }
