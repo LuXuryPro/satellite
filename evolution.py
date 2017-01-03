@@ -10,6 +10,7 @@ f() = satelite_fly_time + satelite_closest_approach
 import math
 import json
 
+from parallel_processing import process_parallel
 from math2d import Vector
 import random
 from objects import Planet
@@ -18,8 +19,21 @@ from simulation import Simulation
 import sys
 from operator import attrgetter
 import argparse
+import time
 
 args = None
+
+
+
+def timeit(func):
+    def newfunc(*args, **kwargs):
+        startTime = time.time()
+        result =  func(*args, **kwargs)
+        elapsedTime = time.time() - startTime
+        print('function [{}] finished in {} ms'.format(
+            func.__name__, int(elapsedTime * 1000)))
+        return result
+    return newfunc
 
 class Cpu:
     """
@@ -29,20 +43,39 @@ class Cpu:
     def __init__(self, speed: float, angle: float, time: int) -> None:
         self.speed = speed
         self.angle = angle % (2 * math.pi)
+        self.normalize_angle()
         self.time = time
         self.score = 10e10
         self.closest_encounter = 0
         self.closest_encounter_time = 0
 
+    def clone(self):
+        c = Cpu(self.speed, self.angle, self.time)
+        c.score = self.score
+        c.closest_encounter = self.closest_encounter
+        c.closest_encounter_time = self.closest_encounter_time
+        return c
+
+    def normalize_angle(self):
+        self.angle = self.angle % (2 * math.pi)
+        if self.angle < 0.0:
+            self.angle = 2 * math.pi + self.angle
+
+
     def cross_over_other(self, other: 'Cpu'):
-        speed = (self.speed + other.speed) / 2
-        angle = (self.angle + other.angle) / 2
-        time = (self.time + other.time) / 2
+        ratio = random.random()
+        speed = ratio * self.speed + (1 - ratio) * other.speed
+        ratio = random.random()
+        angle = ratio * self.angle + (1 - ratio) * other.angle
+        self.normalize_angle()
+        ratio = random.random()
+        time = ratio * self.time + (1 - ratio) * other.time
         return Cpu(speed, angle, time)
 
     def mutate(self, power):
         self.speed = self.speed  + (- power  + 2 * power * random.random())
-        self.angle = self.angle + (- power  + 2 * power * random.random())
+        self.angle = self.angle + (- 2 * math.pi * power  + 2 * 2 * math.pi * power * random.random())
+        self.normalize_angle()
         self.time = self.time + (- power  + 2 * power * random.random())
         if self.time < 0:
             self.time = 0
@@ -65,62 +98,58 @@ class Cpu:
                    50 * random.random())
 
     @staticmethod
+    @timeit
     def init_population(size: int):
         return [Cpu.get_random() for i in range(size)]
 
     @staticmethod
+    @timeit
     def evaluate(population):
         """
         For every phenotype in population simulate it and give score
         """
-        for cpu in population:
-            (planets, start_planet, destination_planet, sun_mass) = Simulation.load_from_file(args.config)
-            satellite = Satellite(start_planet, cpu, destination_planet)
-            simulation = Simulation(planets=planets, satellite=satellite,
-                                    sun_mass=sun_mass)
-            simulation_time = 1000
-            delta = 0.05
-            for i in range(simulation_time):
-                simulation.step(delta)
-            cpu.score = satellite.get_score()
-            cpu.closest_encounter = satellite.closest_encounter
-            cpu.closest_encounter_time = satellite.closest_encounter_time
-            cpu.satellite = satellite
 
+        population = process_parallel(population, args)
         population.sort(key = lambda c: c.score)
         return population
 
     @staticmethod
-    def cross_over(population, i):
-        start_len = len(population)
-        p = population
+    def turnament_selection(population, size_of_turnament, p):
+        """
+        p - probability of picking best one from turnament
+        """
+        turnament = [
+                random.choice(population) for i in range(size_of_turnament)]
+        return min(turnament, key=attrgetter('score'))
+
+    @staticmethod
+    @timeit
+    def cross_over(population, i, size):
         n = []
-        n.append(p[0])
-        s = int(0.1 * len(population))
-        mt = 0.1
-        while len(n) < start_len:
+        while len(n) < (size >> 1):
             sys.stdout.write('\r')
             sys.stdout.write('[')
-            sys.stdout.write('='*len(n) + " "*(start_len - len(n)) + "]")
-            sh = [random.choice(p) for x in range(s)]
-            a = min(sh, key=attrgetter('score'))
-            sh = [random.choice(p) for x in range(s)]
-            b = min(sh, key=attrgetter('score'))
+            sys.stdout.write('='*len(n) + " "*(size - len(n)) + "]")
+            size_of_turnament = 5
+            a = Cpu.turnament_selection(population, size_of_turnament, 0.8)
+            b = Cpu.turnament_selection(population, size_of_turnament, 0.8)
             c = a.cross_over_other(b)
-            c.mutate(mt)
-            k = Cpu.evaluate([c])
-            c = k[0]
-            if c.score < a.score and c.score < b.score or mt > 1:
-                mt = 0.1
-                n.append(c)
-            else:
-                mt += 0.1
+            c.mutate(100.0 /(i + 1) )
+            n.append(c)
 
-        n.sort(key = lambda c: c.score)
         print('')
         return n
 
     @staticmethod
+    @timeit
+    def union(parents, children, final_size):
+        u = parents + children
+        u.sort(key = lambda c: c.score)
+        return u[:final_size - 1]
+
+
+    @staticmethod
+    @timeit
     def histogram(population):
         hist_x = len(population)
         hist_y = 30
@@ -147,15 +176,21 @@ if __name__ == "__main__":
     parser.add_argument("-g", type=int, required=True)
     parser.add_argument("-n", type=int, required=True)
     args = parser.parse_args()
-    n = Cpu.init_population(args.n)
-    n = Cpu.evaluate(n)
+    population = Cpu.init_population(args.n)
+    population = Cpu.evaluate(population)
     for i in range(args.g):
-        Cpu.histogram(n)
-        print(n[0])
-        with open("best_path.json", "w") as f:
-            f.write(n[0].satellite.toJSON())
-        print (sum([x.score for x in n])/len(n))
-        print(n[-1])
-        n = Cpu.cross_over(n, i)
+        Cpu.histogram(population)
+        print("Generation no. " + str(i))
+        print(population[0])
+        with open("graph.txt", "a") as f:
+            f.write("{best} {avg} {worst} {ce}\n".format(ce=population[0].closest_encounter,
+                avg=(sum([x.score for x in population])/len(population)),
+                worst=population[-1].score,
+                best=population[0].score))
+        print(sum([x.score for x in population])/len(population))
+        print(population[-1])
+        children = Cpu.cross_over(population, i, args.n)
+        children = Cpu.evaluate(children)
+        population = Cpu.union(population, children, args.n)
 
 

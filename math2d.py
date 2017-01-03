@@ -59,3 +59,6 @@ class Vector:
 
     def toDict(self):
         return {"x": self.x, "y": self.y}
+
+    def clone(self):
+        return Vector(self.x, self.y)

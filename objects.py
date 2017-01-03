@@ -83,7 +83,7 @@ class Satellite:
             self.closest_encounter_position = Vector(self.position.x, self.position.y)
 
     def get_score(self):
-        return self.closest_encounter + abs(self.cpu.speed) + self.closest_encounter_time
+        return self.closest_encounter + abs(self.cpu.speed)
 
     def toJSON(self):
         l = []

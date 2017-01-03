@@ -29,7 +29,7 @@ args = parser.parse_args()
 pygame.init()
 screen_width = 800
 screen_height = 600
-vector_mid = Vector(float(screen_width >> 1), float(screen_height >> 1))
+vector_mid = Vector(float(screen_width / 2.0), float(screen_height / 2.0))
 screen = pygame.display.set_mode((screen_width, screen_height), HWSURFACE|DOUBLEBUF|RESIZABLE)
 
 clock = pygame.time.Clock()
@@ -61,7 +61,6 @@ def draw(screen: pygame.Surface, simulation: Simulation):
             font = pygame.font.Font(None, 36)
             label = font.render("Destination", 1, (255,255, 255))
             screen.blit(label, (planet_screen_pos.x, planet_screen_pos.y))
-        pygame.draw.line(screen, (0, 255, 0), planet_screen_pos.get_int_tuple(), (planet.velocity * 10 + planet_screen_pos).get_int_tuple(), 2)
     pygame.draw.circle(screen, (255, 255, 0),
                        vector_mid.get_int_tuple(), 10)
 
@@ -87,7 +86,7 @@ while not done:
                     HWSURFACE|DOUBLEBUF|RESIZABLE)
             screen_width = event.dict['size'][0]
             screen_height = event.dict['size'][1]
-            vector_mid = Vector(float(screen_width >> 1), float(screen_height >> 1))
+            vector_mid = Vector(float(screen_width / 2.0), float(screen_height / 2.0))
     screen.fill((0, 0, 0))
     delta = clock.tick(60)
     total += delta * time_factor
@@ -109,13 +108,11 @@ while not done:
             screen_satellite_pos.get_int_tuple(), (cpu.get_velocity_vector() * 100 + screen_satellite_pos).get_int_tuple(), 2)
     if len(sat_p) > 5000:
         sat_p.pop(0)
-    sat_p.append(satellite.position)
-    if len(sat_p) >= 2:
-        for i, p in enumerate(sat_p[0:-1]):
-            pygame.draw.line(screen, (255, 100, 0), (sat_p[i] + vector_mid).get_int_tuple(), (sat_p[i+1] + vector_mid).get_int_tuple(), 2)
+    sat_p.append(satellite.position.clone())
     try:
         pygame.draw.circle(screen, (255, 0, 0), (satellite.closest_encounter_position + vector_mid).get_int_tuple(), 10)
     except:
         pass
-
+    if len(sat_p) >= 2:
+        pygame.draw.lines(screen, (255, 100, 0), False, list(map(lambda x: (x + vector_mid).get_int_tuple(), sat_p)), 2)
     pygame.display.flip()
