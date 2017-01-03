@@ -185,6 +185,7 @@ if __name__ == "__main__":
     parser.add_argument("-n", help="size of population", type=int, required=True)
     parser.add_argument("-t", help="turnament size", type=int, required=True)
     parser.add_argument("-m", help="mutation strenght", type=float, required=False, default=1.0)
+    parser.add_argument("-f", help="ouput file name", type=str)
     args = parser.parse_args()
     population = Cpu.init_population(args.n)
     population = Cpu.evaluate(population)
@@ -192,7 +193,7 @@ if __name__ == "__main__":
         Cpu.histogram(population)
         print("Generation no. " + str(i))
         print(population[0])
-        with open("graph.txt", "a") as f:
+        with open(args.f or "graph.txt", "a") as f:
             f.write("{best} {avg} {worst} {ce}\n".format(ce=population[0].closest_encounter,
                 avg=(sum([x.score for x in population])/len(population)),
                 worst=population[-1].score,
