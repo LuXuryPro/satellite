@@ -141,11 +141,11 @@ class Cpu:
             sys.stdout.write('\r')
             sys.stdout.write('[')
             sys.stdout.write('='*len(n) + " "*(size - len(n)) + "]")
-            size_of_turnament = 5
+            size_of_turnament = args.t
             a = Cpu.turnament_selection(population, size_of_turnament, 0.8)
             b = Cpu.turnament_selection(population, size_of_turnament, 0.8)
             c = a.cross_over_other(b)
-            c.mutate(100.0 /(i + 1) )
+            c.mutate(args.m)
             n.append(c)
 
         print('')
@@ -177,15 +177,14 @@ class Cpu:
 
 
 
-
-
-
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='Simulation visualization')
     parser.add_argument("-c", help="config file name", type=str, dest="config",
                         required=True)
-    parser.add_argument("-g", type=int, required=True)
-    parser.add_argument("-n", type=int, required=True)
+    parser.add_argument("-g", help="number of generations", type=int, required=True)
+    parser.add_argument("-n", help="size of population", type=int, required=True)
+    parser.add_argument("-t", help="turnament size", type=int, required=True)
+    parser.add_argument("-m", help="mutation strenght", type=float, required=False, default=1.0)
     args = parser.parse_args()
     population = Cpu.init_population(args.n)
     population = Cpu.evaluate(population)

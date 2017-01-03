@@ -57,12 +57,17 @@ def draw(screen: pygame.Surface, simulation: Simulation):
             font = pygame.font.Font(None, 36)
             label = font.render("Start", 1, (255,255, 255))
             screen.blit(label, (planet_screen_pos.x, planet_screen_pos.y))
+            pygame.draw.circle(screen, (100, 255, 100),
+                            screen_position.get_int_tuple(), planet.mass)
         elif planet == destination_planet:
             font = pygame.font.Font(None, 36)
             label = font.render("Destination", 1, (255,255, 255))
             screen.blit(label, (planet_screen_pos.x, planet_screen_pos.y))
-    pygame.draw.circle(screen, (255, 255, 0),
-                       vector_mid.get_int_tuple(), 10)
+            pygame.draw.circle(screen, (0, 100, 255),
+                            screen_position.get_int_tuple(), planet.mass)
+
+        pygame.draw.circle(screen, (255, 255, 0),
+                        vector_mid.get_int_tuple(), 10)
 
     satellite_screen_pos = simulation.satellite.position + vector_mid
     rect = (satellite_screen_pos.x - 2, satellite_screen_pos.y - 2, 4, 4)
@@ -105,7 +110,7 @@ while not done:
     pygame.draw.line(screen, (0, 255, 0), screen_satellite_pos.get_int_tuple(), (satellite.velocity * 10 + screen_satellite_pos).get_int_tuple(), 2)
     pygame.draw.line(screen, (0, 255, 255), screen_satellite_pos.get_int_tuple(), (satellite.force * 100 + screen_satellite_pos).get_int_tuple(), 2)
     pygame.draw.line(screen, (255, 0, 255),
-            screen_satellite_pos.get_int_tuple(), (cpu.get_velocity_vector() * 100 + screen_satellite_pos).get_int_tuple(), 2)
+            screen_satellite_pos.get_int_tuple(), (cpu.get_velocity_vector() * 10 + screen_satellite_pos).get_int_tuple(), 2)
     if len(sat_p) > 5000:
         sat_p.pop(0)
     sat_p.append(satellite.position.clone())
