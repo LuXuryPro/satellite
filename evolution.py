@@ -42,9 +42,11 @@ class Cpu:
 
     def __init__(self, speed: float, angle: float, time: int) -> None:
         self.speed = speed
+        self.normalize_speed()
         self.angle = angle % (2 * math.pi)
         self.normalize_angle()
         self.time = time
+        self.normalize_time()
         self.score = 10e10
         self.closest_encounter = 0
         self.closest_encounter_time = 0
@@ -56,29 +58,38 @@ class Cpu:
         c.closest_encounter_time = self.closest_encounter_time
         return c
 
+    def normalize_speed(self):
+        self.speed = abs(self.speed)
+
     def normalize_angle(self):
         self.angle = self.angle % (2 * math.pi)
         if self.angle < 0.0:
             self.angle = 2 * math.pi + self.angle
 
+    def normalize_time(self):
+        if self.time < 0:
+            self.time = 0
 
     def cross_over_other(self, other: 'Cpu'):
         ratio = random.random()
         speed = ratio * self.speed + (1 - ratio) * other.speed
+        self.normalize_speed()
         ratio = random.random()
         angle = ratio * self.angle + (1 - ratio) * other.angle
         self.normalize_angle()
         ratio = random.random()
         time = ratio * self.time + (1 - ratio) * other.time
+        self.normalize_time()
         return Cpu(speed, angle, time)
+
 
     def mutate(self, power):
         self.speed = self.speed  + (- power  + 2 * power * random.random())
+        self.normalize_speed()
         self.angle = self.angle + (- 2 * math.pi * power  + 2 * 2 * math.pi * power * random.random())
         self.normalize_angle()
         self.time = self.time + (- power  + 2 * power * random.random())
-        if self.time < 0:
-            self.time = 0
+        self.normalize_time()
 
     def get_velocity_vector(self):
         return Vector(math.cos(self.angle),
