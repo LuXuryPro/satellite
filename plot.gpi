@@ -1,0 +1,340 @@
+set terminal pdf enhanced font "Helvetica,14" size 8.3,11.7
+set output 'out.pdf'
+set xlabel "Numer pokolenia"
+set ylabel "Wartość funkcji celu"
+
+####
+set title "Wartość funkcji celu w poszczególnych pokoleniach\nliczba osobników = 100\nrozmair turnieju = 20\nwspółczynnik mutacji = 1.0\nskala liniowa"
+filename ="1483522057"
+unset log
+plot filename using 1 with lines title 'najlepszy',\
+     filename using 2 with lines title 'średnia', \
+     filename using 3 with lines title 'najgorszy'
+
+set title "Wartość funkcji celu w poszczególnych pokoleniach\nliczba osobników = 100\nrozmair turnieju = 20\nwspółczynnik mutacji = 1.0\nskala logarytmiczna"
+filename ="1483522057"
+set log
+plot filename using 1 with lines title 'najlepszy',\
+     filename using 2 with lines title 'średnia', \
+     filename using 3 with lines title 'najgorszy'
+
+####
+set title "Wartość funkcji celu w poszczególnych pokoleniach\nliczba osobników = 100\nrozmair turnieju = 80\nwspółczynnik mutacji = 1.0\nskala logarytmiczna"
+filename ="1483523085"
+unset log
+plot filename using 1 with lines title 'najlepszy',\
+     filename using 2 with lines title 'średnia', \
+     filename using 3 with lines title 'najgorszy'
+
+set title "Wartość funkcji celu w poszczególnych pokoleniach\nliczba osobników = 100\nrozmair turnieju = 80\nwspółczynnik mutacji = 1.0\nskala logarytmiczna"
+filename ="1483523085"
+set log
+plot filename using 1 with lines title 'najlepszy',\
+     filename using 2 with lines title 'średnia', \
+     filename using 3 with lines title 'najgorszy'
+
+set title "Porównanie poprzednich wykresów\nskala logarytmiczna"
+filename0="1483522057"
+filename1 ="1483523085"
+set log
+plot filename0 using 2 with lines title 'średnia przy rozmiarze turnieju = 20',\
+     filename1 using 2 with lines title 'średnia przy rozmiarze turnieju = 80', \
+
+
+set title "Wartość funkcji celu w poszczególnych pokoleniach\nliczba osobników = 100\nrozmair turnieju = 10\nwspółczynnik mutacji = 50.0\nskala liniowa"
+unset log
+filename ="1483523916"
+plot filename using 1 with lines title 'najlepszy',\
+     filename using 2 with lines title 'średnia', \
+     filename using 3 with lines title 'najgorszy'
+
+set title "Wartość funkcji celu w poszczególnych pokoleniach\nliczba osobników = 100\nrozmair turnieju = 10\nwspółczynnik mutacji = 50.0\nskala logarytmiczna"
+set log
+filename ="1483523916"
+plot filename using 1 with lines title 'najlepszy',\
+     filename using 2 with lines title 'średnia', \
+     filename using 3 with lines title 'najgorszy'
+
+
+set title "Wartość funkcji celu w poszczególnych pokoleniach\nliczba osobników = 10\nrozmair turnieju = 3\nwspółczynnik mutacji = 1.0\nskala liniowa"
+filename ="1483525515"
+unset log
+plot filename using 1 with lines title 'najlepszy',\
+     filename using 2 with lines title 'średnia', \
+     filename using 3 with lines title 'najgorszy'
+
+set log
+set title "Wartość funkcji celu w poszczególnych pokoleniach\nliczba osobników = 10\nrozmair turnieju = 3\nwspółczynnik mutacji = 1.0\nskala logarytmiczna"
+plot filename using 1 with lines title 'najlepszy',\
+     filename using 2 with lines title 'średnia', \
+     filename using 3 with lines title 'najgorszy'
+
+
+filename ="1483526771"
+set title "Wartość funkcji celu w poszczególnych pokoleniach\nliczba osobników = 2\nrozmair turnieju = 1\nwspółczynnik mutacji = 100.0\nskala liniowa"
+unset log
+plot filename using 1 with lines title 'najlepszy',\
+     filename using 2 with lines title 'średnia', \
+     filename using 3 with lines title 'najgorszy'
+
+set title "Wartość funkcji celu w poszczególnych pokoleniach\nliczba osobników = 2\nrozmair turnieju = 1\nwspółczynnik mutacji = 100.0\nskala logarytmiczna"
+set log
+plot filename using 1 with lines title 'najlepszy',\
+     filename using 2 with lines title 'średnia', \
+     filename using 3 with lines title 'najgorszy'
+
+
+filename ="1483527334"
+set title "Wartość funkcji celu w poszczególnych pokoleniach\nliczba osobników = 50\nrozmair turnieju = 20\nwspółczynnik mutacji = 1.0\nskala liniowa"
+unset log
+plot filename using 1 with lines title 'najlepszy',\
+     filename using 2 with lines title 'średnia', \
+     filename using 3 with lines title 'najgorszy'
+set title "Wartość funkcji celu w poszczególnych pokoleniach\nliczba osobników = 50\nrozmair turnieju = 20\nwspółczynnik mutacji = 1.0\nskala logarytmiczna"
+set log
+plot filename using 1 with lines title 'najlepszy',\
+     filename using 2 with lines title 'średnia', \
+     filename using 3 with lines title 'najgorszy'
+
+set title "Porównanie dla różnych rozmiarów populacji\nskala logarytmiczna"
+set log
+filename0="1483522057"
+filename1="1483527334"
+plot filename0 using 2 with lines title 'średnia przy liczbie osobników = 100',\
+     filename1 using 2 with lines title 'średnia przy liczbie osobników = 50'
+
+
+filename ="1483525515" #10 osobników
+filename2 ="1483522057" #100 osobnikow
+filename3 ="1483527334" #50 osobników
+set title "Porównanie dla różnych rozmiarów populacji\nskala logarytmiczna"
+set log
+plot filename using 2 with lines title 'średnia dla liczby osobników = 10',\
+     filename3 using 2 with lines title 'średnia przy liczbie osobników = 50',\
+     filename2 using 2 with lines title 'średnai dla liczby osobników = 100'
+
+
+
+set xlabel "Numer osobnika"
+set ylabel "Wartość funkcji celu"
+set title "Histogram populacji\nliczba osobników = 100\nliczba pokoleń = 1000\nskala liniowa"
+unset log
+filename0 = "1483535561hist0"
+filename1 = "1483535561hist1"
+filename2 = "1483535561hist3"
+filename3 = "1483535561hist7"
+filename4 = "1483535561hist15"
+filename5 = "1483535561hist31"
+filename6 = "1483535561hist62"
+filename7 = "1483535561hist125"
+filename8 = "1483535561hist250"
+filename9 = "1483535561hist500"
+filename10 ="1483535561hist999"
+plot filename0 using 1 with lines title '1 populacja',\
+     filename1 using 1 with lines title '2 populacja',\
+     filename2 using 1 with lines title '4 populacja',\
+     filename3 using 1 with lines title '8 populacja',\
+     filename4 using 1 with lines title '16 populacja',\
+     filename5 using 1 with lines title '32 populacja',\
+     filename6 using 1 with lines title '63 populacja',\
+     filename7 using 1 with lines title '126 populacja',\
+     filename8 using 1 with lines title '251 populacja',\
+     filename9 using 1 with lines title '501 populacja',\
+     filename10 using 1 with lines title '1000 populacja',\
+
+set title "Histogram populacji\nliczba osobników = 100\nliczba pokoleń = 1000\nskala logarytmiczna"
+set log
+filename0 = "1483535561hist0"
+filename1 = "1483535561hist1"
+filename2 = "1483535561hist3"
+filename3 = "1483535561hist7"
+filename4 = "1483535561hist15"
+filename5 = "1483535561hist31"
+filename6 = "1483535561hist62"
+filename7 = "1483535561hist125"
+filename8 = "1483535561hist250"
+filename9 = "1483535561hist500"
+filename10 ="1483535561hist999"
+plot filename0 using 1 with lines title '1 populacja',\
+     filename1 using 1 with lines title '2 populacja',\
+     filename2 using 1 with lines title '4 populacja',\
+     filename3 using 1 with lines title '8 populacja',\
+     filename4 using 1 with lines title '16 populacja',\
+     filename5 using 1 with lines title '32 populacja',\
+     filename6 using 1 with lines title '63 populacja',\
+     filename7 using 1 with lines title '126 populacja',\
+     filename8 using 1 with lines title '251 populacja',\
+     filename9 using 1 with lines title '501 populacja',\
+     filename10 using 1 with lines title '1000 populacja',\
+
+set title "Histogram populacji\nliczba osobników = 100\nliczba pokoleń = 1000\nskala logarytmiczna y"
+set log y
+filename0 = "1483535561hist0"
+filename1 = "1483535561hist1"
+filename2 = "1483535561hist3"
+filename3 = "1483535561hist7"
+filename4 = "1483535561hist15"
+filename5 = "1483535561hist31"
+filename6 = "1483535561hist62"
+filename7 = "1483535561hist125"
+filename8 = "1483535561hist250"
+filename9 = "1483535561hist500"
+filename10 ="1483535561hist999"
+plot filename0 using 1 with lines title '1 populacja',\
+     filename1 using 1 with lines title '2 populacja',\
+     filename2 using 1 with lines title '4 populacja',\
+     filename3 using 1 with lines title '8 populacja',\
+     filename4 using 1 with lines title '16 populacja',\
+     filename5 using 1 with lines title '32 populacja',\
+     filename6 using 1 with lines title '63 populacja',\
+     filename7 using 1 with lines title '126 populacja',\
+     filename8 using 1 with lines title '251 populacja',\
+     filename9 using 1 with lines title '501 populacja',\
+     filename10 using 1 with lines title '1000 populacja',\
+
+set title "Histogram populacji\nliczba osobników = 5\nliczba pokoleń = 1000\nskala linowa"
+unset log
+filename0 = "1483538710hist0"
+filename1 = "1483538710hist1"
+filename2 = "1483538710hist3"
+filename3 = "1483538710hist7"
+filename4 = "1483538710hist15"
+filename5 = "1483538710hist31"
+filename6 = "1483538710hist62"
+filename7 = "1483538710hist125"
+filename8 = "1483538710hist250"
+filename9 = "1483538710hist500"
+filename10 ="1483538710hist999"
+plot filename0 using 1 with lines title '1 populacja',\
+     filename1 using 1 with lines title '2 populacja',\
+     filename2 using 1 with lines title '4 populacja',\
+     filename3 using 1 with lines title '8 populacja',\
+     filename4 using 1 with lines title '16 populacja',\
+     filename5 using 1 with lines title '32 populacja',\
+     filename6 using 1 with lines title '63 populacja',\
+     filename7 using 1 with lines title '126 populacja',\
+     filename8 using 1 with lines title '251 populacja',\
+     filename9 using 1 with lines title '501 populacja',\
+     filename10 using 1 with lines title '1000 populacja',\
+
+set title "Histogram populacji\nliczba osobników = 5\nliczba pokoleń = 1000\nskala logarytmiczna y"
+set log y
+filename0 = "1483538710hist0"
+filename1 = "1483538710hist1"
+filename2 = "1483538710hist3"
+filename3 = "1483538710hist7"
+filename4 = "1483538710hist15"
+filename5 = "1483538710hist31"
+filename6 = "1483538710hist62"
+filename7 = "1483538710hist125"
+filename8 = "1483538710hist250"
+filename9 = "1483538710hist500"
+filename10 ="1483538710hist999"
+plot filename0 using 1 with lines title '1 populacja',\
+     filename1 using 1 with lines title '2 populacja',\
+     filename2 using 1 with lines title '4 populacja',\
+     filename3 using 1 with lines title '8 populacja',\
+     filename4 using 1 with lines title '16 populacja',\
+     filename5 using 1 with lines title '32 populacja',\
+     filename6 using 1 with lines title '63 populacja',\
+     filename7 using 1 with lines title '126 populacja',\
+     filename8 using 1 with lines title '251 populacja',\
+     filename9 using 1 with lines title '501 populacja',\
+     filename10 using 1 with lines title '1000 populacja',\
+
+set title "Histogram populacji\nliczba osobników = 5\nliczba pokoleń = 1000\nskala logarytmiczna"
+set log
+filename0 = "1483538710hist0"
+filename1 = "1483538710hist1"
+filename2 = "1483538710hist3"
+filename3 = "1483538710hist7"
+filename4 = "1483538710hist15"
+filename5 = "1483538710hist31"
+filename6 = "1483538710hist62"
+filename7 = "1483538710hist125"
+filename8 = "1483538710hist250"
+filename9 = "1483538710hist500"
+filename10 ="1483538710hist999"
+plot filename0 using 1 with lines title '1 populacja',\
+     filename1 using 1 with lines title '2 populacja',\
+     filename2 using 1 with lines title '4 populacja',\
+     filename3 using 1 with lines title '8 populacja',\
+     filename4 using 1 with lines title '16 populacja',\
+     filename5 using 1 with lines title '32 populacja',\
+     filename6 using 1 with lines title '63 populacja',\
+     filename7 using 1 with lines title '126 populacja',\
+     filename8 using 1 with lines title '251 populacja',\
+     filename9 using 1 with lines title '501 populacja',\
+     filename10 using 1 with lines title '1000 populacja',\
+
+set title "Histogram populacji\nliczba osobników = 50\nliczba pokoleń = 100\nskala linowa"
+unset log
+filename0 = "1483548046hist0"
+filename1 = "1483548046hist1"
+filename2 = "1483548046hist3"
+filename3 = "1483548046hist6"
+filename4 = "1483548046hist12"
+filename5 = "1483548046hist25"
+filename6 = "1483548046hist50"
+filename7 = "1483548046hist99"
+plot filename0 using 1 with lines title '1 populacja',\
+     filename1 using 1 with lines title '4 populacja',\
+     filename2 using 1 with lines title '3 populacja',\
+     filename3 using 1 with lines title '6 populacja',\
+     filename4 using 1 with lines title '12 populacja',\
+     filename5 using 1 with lines title '25 populacja',\
+     filename6 using 1 with lines title '50 populacja',\
+     filename7 using 1 with lines title '100 populacja',\
+
+set title "Histogram populacji\nliczba osobników = 50\nliczba pokoleń = 100\nskala logarytmiczna y"
+set log y
+filename0 = "1483548046hist0"
+filename1 = "1483548046hist1"
+filename2 = "1483548046hist3"
+filename3 = "1483548046hist6"
+filename4 = "1483548046hist12"
+filename5 = "1483548046hist25"
+filename6 = "1483548046hist50"
+filename7 = "1483548046hist99"
+plot filename0 using 1 with lines title '1 populacja',\
+     filename1 using 1 with lines title '4 populacja',\
+     filename2 using 1 with lines title '3 populacja',\
+     filename3 using 1 with lines title '6 populacja',\
+     filename4 using 1 with lines title '12 populacja',\
+     filename5 using 1 with lines title '25 populacja',\
+     filename6 using 1 with lines title '50 populacja',\
+     filename7 using 1 with lines title '100 populacja',\
+
+set title "Histogram populacji\nliczba osobników = 50\nliczba pokoleń = 100\nskala logarytmiczna"
+set log
+filename0 = "1483548046hist0"
+filename1 = "1483548046hist1"
+filename2 = "1483548046hist3"
+filename3 = "1483548046hist6"
+filename4 = "1483548046hist12"
+filename5 = "1483548046hist25"
+filename6 = "1483548046hist50"
+filename7 = "1483548046hist99"
+plot filename0 using 1 with lines title '1 populacja',\
+     filename1 using 1 with lines title '4 populacja',\
+     filename2 using 1 with lines title '3 populacja',\
+     filename3 using 1 with lines title '6 populacja',\
+     filename4 using 1 with lines title '12 populacja',\
+     filename5 using 1 with lines title '25 populacja',\
+     filename6 using 1 with lines title '50 populacja',\
+     filename7 using 1 with lines title '100 populacja',\
+
+
+set title "Log wygenerwanych punków na 100 pokoleń populacji 50 osobników symulacja 1"
+unset log
+set xlabel "Prędkość"
+set ylabel "Kąt"
+set zlabel "Czas"
+splot '1483547364scatter' with points pointtype 7 title 'Log'
+
+set title "Log wygenerwanych punków na 100 pokoleń populacji 50 osobników symulacja 2"
+unset log
+set xlabel "Prędkość"
+set ylabel "Kąt"
+set zlabel "Czas"
+splot '1483548046scatter' with points pointtype 7 title 'Log'
