@@ -145,7 +145,10 @@ class Cpu:
             a = Cpu.turnament_selection(population, size_of_turnament, 0.8)
             b = Cpu.turnament_selection(population, size_of_turnament, 0.8)
             c = a.cross_over_other(b)
-            c.mutate(args.m)
+            if args.ma:
+                c.mutate(args.m / (1 + i))
+            else:
+                c.mutate(args.m)
             n.append(c)
 
         print('')
@@ -186,18 +189,34 @@ if __name__ == "__main__":
     parser.add_argument("-t", help="turnament size", type=int, required=True)
     parser.add_argument("-m", help="mutation strenght", type=float, required=False, default=1.0)
     parser.add_argument("-f", help="ouput file name", type=str)
+    parser.add_argument("--hist", help="draw histogram", action="store_true", default=False)
+    parser.add_argument("--log", help="prepare scatter log", action="store_true", default=False)
+    parser.add_argument("--annealing" ,"-ma", help="enable mutation strenght annealing", action="store_true", default=False, dest="ma")
     args = parser.parse_args()
+    timestamp = str(int(time.time()))
+    with open(args.f or timestamp, "a") as f:
+        f.write("#" + str(args) + "\n")
     population = Cpu.init_population(args.n)
     population = Cpu.evaluate(population)
     for i in range(args.g):
-        Cpu.histogram(population)
+        if args.hist:
+            if i == 0 or i == args.g >> 9 or i == args.g >> 8 or i == args.g >> 7 or i == args.g >> 6 or i == args.g >> 5 or i == args.g >> 4 or i == args.g >> 3 or i == args.g >> 2 or i == args.g >> 1 or i == args.g - 1:
+                with open(args.f or timestamp + "hist" + str(i), "a") as f:
+                    for p in population:
+                        f.write("{fitenss}\n".format(fitenss=p.score))
+                #Cpu.histogram(population)
         print("Generation no. " + str(i))
         print(population[0])
-        with open(args.f or "graph.txt", "a") as f:
+        with open(args.f or timestamp, "a") as f:
             f.write("{best} {avg} {worst} {ce}\n".format(ce=population[0].closest_encounter,
                 avg=(sum([x.score for x in population])/len(population)),
                 worst=population[-1].score,
                 best=population[0].score))
+        if args.log:
+            with open(args.f or timestamp + "scatter", "a") as f:
+                for p in population:
+                    f.write("{speed} {angle} {time}\n".format(
+                        speed=p.speed, angle=p.angle, time=p.time))
         print(sum([x.score for x in population])/len(population))
         print(population[-1])
         children = Cpu.cross_over(population, i, args.n)

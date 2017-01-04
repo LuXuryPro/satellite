@@ -18,7 +18,7 @@ def one_satellite(cpu):
     return cpu
 
 def process_parallel(population, args):
-    with Pool(4) as p:
+    with Pool() as p:
         return p.map(one_satellite, population)
 
 if __name__ == "__main__":
